@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+
+<html>
+ 
+<head>
+  <meta charset="UTF-8">
+  <title>Block</title>
+  
+      <link rel="stylesheet" href="./static/style.css"> 
+</head>
+<body>
+
+<header>
+  <top>
+      <img src="./static/banner.jpg" alt="Page title">
+  </top>
+  
+</header>
+
+<banner>
+  <left>
+  </left>
+  <right>
+      <img src="./static/dass.jpg" alt="visualization title">
+  </right>
+  
+</banner>
+ 
+<main>
+  <block_m></block_m>
+  <left>
+      <img src="./static/dass_visualization.jpg" alt="data" >
+  </left>
+    
+  <block_m></block_m>  
+    
+<right>
+<div-s>
+      
+    <p>Gender</p>
+
+</div-s>
+<!-- Tab links -->
+<div class="tab">
+  <button class="tablinks" onclick="openCity(event, 'All')">All</button>
+  <button class="tablinks" onclick="openCity(event, 'Male')">Male</button>
+  <button class="tablinks" onclick="openCity(event, 'Female')">Female</button>
+</div>
+
+<!-- Tab content -->
+<div id="All" class="tabcontent">
+
+</div>
+
+<div id="Male" class="tabcontent">
+
+</div>
+
+<div id="Female" class="tabcontent">
+    
+</div>
+
+<div>
+    <p>Race</p>
+</div>
+      
+<div>
+<select id="Race">
+  <option>option1</option>
+  <option>option2</option>
+  <option>option3</option>
+</select>
+</div>
+    
+<div>
+    <p>Age</p>
+</div>
+      
+<div>
+  from
+<select id="Age_min">
+  <option>10</option>
+  <option>11</option>
+  <option>12</option>
+</select>
+ to 
+<select id="Age_max">
+  <option>10</option>
+  <option>11</option>
+  <option>12</option>
+</select>
+</div>
+
+</right>
+
+</main>
+
+<script>
+function openCity(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  <!-- document.getElementById(cityName).style.display = "block"; -->
+  evt.currentTarget.className += " active";
+}
+</script>
+    
+</body>
+</html>
