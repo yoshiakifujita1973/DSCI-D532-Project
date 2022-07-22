@@ -25,9 +25,9 @@ def index_dass():
 def visualization():
     import sqlvisualize
     
-    sqlvisualize.visualize_sql()
+    fname = sqlvisualize.visualize_sql()
     
-    return render_template('visualization.html', title='personality visualization')
+    return render_template('visualization.html', title='personality visualization', fname=fname)
 
 @app.route("/visualizationDS")
 def dass_visualizationDS():
@@ -73,7 +73,9 @@ def action():
     elif request.method == 'GET':
         return request.form['Gender']
     
-    sqlvisualize.peasonal_visualize_filter(gender, race, age_min, age_max, depression, anxiety, stress)
+    fname = sqlvisualize.peasonal_visualize_filter(gender, race, age_min, age_max, depression, anxiety, stress)
+    
+    return render_template('visualization.html', title='personality visualization', fname=fname)
     
 if __name__ == '__main__':
     app.run()

@@ -8,6 +8,7 @@ def visualize_sql():
     import matplotlib.pyplot as plt
     from matplotlib.gridspec import GridSpec
     from math import pi
+    import datetime
 
     cnx = mysql.connector.connect(user='gen_viewer', password='1234',
                                       host='127.0.0.1',
@@ -93,7 +94,17 @@ def visualize_sql():
       alpha=0.1
     )
 
-    plt.savefig('./templates/static/visualization.jpg')
+    system_time = datetime.datetime.now()
+
+    t = (system_time.strftime("%m%d%H%M%S"))
+
+    fname = 'visualization' + t + '.jpg'
+
+    filepath = './templates/static/' + fname
+
+    plt.savefig(filepath)
+        
+    return fname
     
 def peasonal_visualize_filter(gender, race, age_min, age_max, depression, anxiety, stress):
     import mysql.connector
@@ -101,15 +112,49 @@ def peasonal_visualize_filter(gender, race, age_min, age_max, depression, anxiet
     import matplotlib.pyplot as plt
     from matplotlib.gridspec import GridSpec
     from math import pi
+    import datetime
+    
+    # Set up colors
+    ORANGE = '#FD7120'
+    BLUE = '#00BFFF'
+    BLACK = '#000000'
+    GRAY = '#999999'
 
     cnx = mysql.connector.connect(user='gen_viewer', password='1234',
                                       host='127.0.0.1',
                                       database='trouble_shoot')
 
     c = cnx.cursor()
+    
+    if gender == 'Male':
+        
+        c. execute('''SELECT tipi1 + tipi6 AS Extraversion, tipi2 + tipi7 AS Agreeableness, tipi3 + tipi8 AS Conscientiousness,
+            tipi4 + tipi9 AS Emotional_Stability, tipi5+ tipi10 AS Openness_to_Experience FROM dass_tipi
+            INNER JOIN dass_test
+            ON dass_tipi.test_id = dass_test.test_id            
+            INNER JOIN test_taker
+            ON dass_test.taker_id = test_taker.taker_id
+            WHERE test_taker.gender = 1''')
+        draw_color = BLUE
+        
+    elif gender == 'Female':
+        
+        c. execute('''SELECT tipi1 + tipi6 AS Extraversion, tipi2 + tipi7 AS Agreeableness, tipi3 + tipi8 AS Conscientiousness,
+            tipi4 + tipi9 AS Emotional_Stability, tipi5+ tipi10 AS Openness_to_Experience FROM dass_tipi
+            INNER JOIN dass_test
+            ON dass_tipi.test_id = dass_test.test_id            
+            INNER JOIN test_taker
+            ON dass_test.taker_id = test_taker.taker_id
+            WHERE test_taker.gender = 2''')
+        
+        draw_color = ORANGE
+        
+    else:
 
-    c. execute('''SELECT tipi1 + tipi6 AS Extraversion, tipi2 + tipi7 AS Agreeableness, tipi3 + tipi8 AS Conscientiousness,
-    tipi4 + tipi9 AS Emotional_Stability, tipi5+ tipi10 AS Openness_to_Experience FROM dass_tipi''')
+        c. execute('''SELECT tipi1 + tipi6 AS Extraversion, tipi2 + tipi7 AS Agreeableness, tipi3 + tipi8 AS Conscientiousness,
+            tipi4 + tipi9 AS Emotional_Stability, tipi5+ tipi10 AS Openness_to_Experience FROM dass_tipi''')
+        
+        draw_color = BLACK
 
     df = pd.DataFrame(c.fetchall())
 
@@ -129,12 +174,6 @@ def peasonal_visualize_filter(gender, race, age_min, age_max, depression, anxiet
     num_skills = len(skills)
 
     angles = [i / float(num_skills) * 2 * pi for i in range(num_skills)]
-
-    # Set up colors
-    ORANGE = '#FD7120'
-    BLUE = '#00BFFF'
-    BLACK = '#000000'
-    GRAY = '#999999'
 
     # Clear the plot to start with a blank canvas.
     plt.clf()
@@ -174,7 +213,7 @@ def peasonal_visualize_filter(gender, race, age_min, age_max, depression, anxiet
     series_1.plot(
       angles,
       series_1_values,
-      color=BLACK,
+      color=draw_color,
       linestyle='solid',
       linewidth=1,
       alpha=0.1
@@ -182,12 +221,21 @@ def peasonal_visualize_filter(gender, race, age_min, age_max, depression, anxiet
     series_1.fill(
       angles,
       series_1_values,
-      color=BLACK,
+      color=draw_color,
       alpha=0.1
     )
-
-    plt.savefig('./templates/static/visualization.jpg')
     
+    system_time = datetime.datetime.now()
+
+    t = (system_time.strftime("%m%d%H%M%S"))
+
+    fname = 'visualization' + t + '.jpg'
+
+    filepath = './templates/static/' + fname
+
+    plt.savefig(filepath)
+        
+    return fname
     
 def dass_visualize_sql(dass_type):
     
