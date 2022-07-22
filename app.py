@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import request
 from flask import render_template
 
 #app = Flask(__name__)
@@ -28,16 +29,51 @@ def visualization():
     
     return render_template('visualization.html', title='personality visualization')
 
-@app.route("/visualization/<dass_type>")
-def dass_visualization(dass_type):
+@app.route("/visualizationDS")
+def dass_visualizationDS():
     import sqlvisualize
-    
-    #sqlvisualize.dass_visualize_sql(dass_type)
-    
+    dass_type = "DS"
     sqlvisualize.dass_visualize_sql(dass_type)
 
-    return render_template('dass_visualization.html', title='dass visualization')
+    return render_template('dass_visualization.html', title='personality visualization')
 
+@app.route("/visualizationAS")
+def dass_visualizationAS():
+    import sqlvisualize
+    dass_type = "AS"
+    sqlvisualize.dass_visualize_sql(dass_type)
 
+    return render_template('dass_visualization.html', title='personality visualization')
+
+@app.route("/visualizationAD")
+def dass_visualizationAD():
+    import sqlvisualize
+    dass_type = "AD"
+    sqlvisualize.dass_visualize_sql(dass_type)
+
+    return render_template('dass_visualization.html', title='personality visualization')
+
+@app.route("/action", methods=['GET', 'POST'])
+def action():
+    
+    import sqlvisualize
+    
+    if request.method == 'POST':
+        
+        gender = request.form['Gender']
+        race = request.form['Race']
+        age_min = request.form['Age_min']
+        age_max = request.form['Age_max'] 
+        depression = request.form['Depression']
+        anxiety = request.form['Anxiety']
+        stress = request.form['Stress']
+        
+        #s = gender + ' ' + race + ' ' + age_min + ' ' + age_max + ' ' + depression + ' ' + anxiety + ' ' + stress
+        
+    elif request.method == 'GET':
+        return request.form['Gender']
+    
+    sqlvisualize.peasonal_visualize_filter(gender, race, age_min, age_max, depression, anxiety, stress)
+    
 if __name__ == '__main__':
     app.run()
