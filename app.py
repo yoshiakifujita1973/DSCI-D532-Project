@@ -93,11 +93,10 @@ def action():
         stress = request.form['Stress']
         
         #s = gender + ' ' + race + ' ' + age_min + ' ' + age_max + ' ' + depression + ' ' + anxiety + ' ' + stress
-        
-    elif request.method == 'GET':
-        return request.form['Gender']
-    
-    fname = sqlvisualize.peasonal_visualize_filter(gender, race, age_min, age_max, depression, anxiety, stress)
+    if gender == "Male vs Female":
+        fname = sqlvisualize.peasonal_visualize_male_female(race, age_min, age_max, depression, anxiety, stress)
+    else:
+        fname = sqlvisualize.peasonal_visualize_filter(gender, race, age_min, age_max, depression, anxiety, stress)
     
     return render_template('visualization.html', title='personality visualization', fname=fname)
     
