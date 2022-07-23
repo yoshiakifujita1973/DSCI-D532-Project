@@ -88,16 +88,13 @@ CREATE TABLE dass_stress(
    Q33A   INT CHECK (0 < Q33A  < 5),
    Q35A   INT CHECK (0 < Q35A  < 5),
    Q39A   INT CHECK (0 < Q39A  < 5),
-   Totalscore INT CHECK (0 < Totalscore  < 57));
+   StressTotal INT CHECK (0 < StressTotal < 57));
    
 ALTER TABLE dass_stress
 ADD CONSTRAINT FK_stress_test_id
 FOREIGN KEY (test_id) REFERENCES dass_test(test_id);
-   
-INSERT INTO dass_stress (test_id, Q1A, Q6A, Q8A, Q11A, Q12A, Q14A, Q18A, Q22A, Q27A, Q29A, Q32A, Q33A, Q35A, Q39A) 
-SELECT test_id, Q1A, Q6A, Q8A, Q11A, Q12A, Q14A, Q18A, Q22A, Q27A, Q29A, Q32A, Q33A, Q35A, Q39A FROM dass_source;
 
-INSERT INTO dass_stress (test_id, Q1A, Q6A, Q8A, Q11A, Q12A, Q14A, Q18A, Q22A, Q27A, Q29A, Q32A, Q33A, Q35A, Q39A, Totalscore) 
+INSERT INTO dass_stress (test_id, Q1A, Q6A, Q8A, Q11A, Q12A, Q14A, Q18A, Q22A, Q27A, Q29A, Q32A, Q33A, Q35A, Q39A, StressTotal) 
 SELECT test_id, Q1A, Q6A, Q8A, Q11A, Q12A, Q14A, Q18A, Q22A, Q27A, Q29A, Q32A, Q33A, Q35A, Q39A, Q1A + Q6A + Q8A + Q11A + Q12A + Q14A + Q18A + Q22A + Q27A + Q29A + Q32A + Q33A + Q35A + Q39A FROM dass_source;
 
 CREATE TABLE dass_depression(
@@ -116,13 +113,13 @@ CREATE TABLE dass_depression(
    Q37A   INT CHECK (0 < Q37A  < 5),
    Q38A   INT CHECK (0 < Q38A  < 5),
    Q42A   INT CHECK (0 < Q42A  < 5),
-   Totalscore INT CHECK (0 < Totalscore  < 57));
+   DepressionTotal INT CHECK (0 < DepressionTotal  < 57));
    
 ALTER TABLE dass_depression
 ADD CONSTRAINT FK_depression_test_id
 FOREIGN KEY (test_id) REFERENCES dass_test(test_id);
    
-INSERT INTO dass_depression (test_id, Q3A, Q5A, Q10A, Q13A, Q16A, Q17A, Q21A, Q24A, Q26A, Q31A, Q34A, Q37A, Q38A, Q42A, Totalscore) 
+INSERT INTO dass_depression (test_id, Q3A, Q5A, Q10A, Q13A, Q16A, Q17A, Q21A, Q24A, Q26A, Q31A, Q34A, Q37A, Q38A, Q42A, DepressionTotal) 
 SELECT test_id, Q3A, Q5A, Q10A, Q13A, Q16A, Q17A, Q21A, Q24A, Q26A, Q31A, Q34A, Q37A, Q38A, Q42A, Q3A + Q5A + Q10A + Q13A + Q16A + Q17A + Q21A + Q24A + Q26A + Q31A + Q34A + Q37A + Q38A + Q42A FROM dass_source;
 
 
@@ -142,14 +139,14 @@ CREATE TABLE dass_anxiety(
    Q36A   INT CHECK (0 < Q36A  < 5),
    Q40A   INT CHECK (0 < Q40A  < 5),
    Q41A   INT CHECK (0 < Q41A  < 5),
-   Totalscore INT CHECK (0 < Totalscore  < 57));
+   AnxietyTotal INT CHECK (0 < AnxietyTotal < 57));
    
 ALTER TABLE dass_anxiety
 ADD CONSTRAINT FK_anxiety_test_id
 FOREIGN KEY (test_id) REFERENCES dass_test(test_id);
 
 
-INSERT INTO dass_anxiety (test_id, Q2A, Q4A, Q7A, Q9A, Q15A, Q19A, Q20A, Q23A, Q25A, Q28A, Q30A, Q36A, Q40A, Q41A, Totalscore) 
+INSERT INTO dass_anxiety (test_id, Q2A, Q4A, Q7A, Q9A, Q15A, Q19A, Q20A, Q23A, Q25A, Q28A, Q30A, Q36A, Q40A, Q41A, AnxietyTotal) 
 SELECT test_id, Q2A, Q4A, Q7A, Q9A, Q15A, Q19A, Q20A, Q23A, Q25A, Q28A, Q30A, Q36A, Q40A, Q41A, Q2A + Q4A + Q7A + Q9A + Q15A + Q19A + Q20A + Q23A + Q25A + Q28A + Q30A + Q36A + Q40A FROM dass_source;
 
 CREATE TABLE dass_tipi(
