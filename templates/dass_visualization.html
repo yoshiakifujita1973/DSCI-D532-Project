@@ -12,7 +12,9 @@
 
 <header>
   <top>
+      <a href="http://localhost:5000/index" >
       <img src="./static/banner.jpg" alt="Page title">
+      </a>
   </top>
   
 </header>
@@ -29,7 +31,7 @@
 <main>
   <block_m></block_m>
   <left>
-      <img src="./static/dass_visualization.jpg" alt="data" >
+      <img src="./static/{{fname}}" alt="data" >
   </left>
     
   <block_m></block_m>  
@@ -60,15 +62,21 @@
     
 </div>
 
+<form action="http://localhost:5000/dassaction" method="post">
+    
 <div>
     <p>Race</p>
 </div>
       
 <div>
-<select id="Race">
-  <option>option1</option>
-  <option>option2</option>
-  <option>option3</option>
+<select id="Race" name="Race">
+  <option>select</option>  
+  <option>Asian</option>
+  <option>Arab</option>
+  <option>Black</option>
+  <option>Indigenous Australian</option>
+  <option>Native American</option>
+  <option>White</option>    
 </select>
 </div>
     
@@ -78,19 +86,38 @@
       
 <div>
   from
-<select id="Age_min">
-  <option>10</option>
-  <option>11</option>
-  <option>12</option>
+<select id="Age_min" name="Age_min">
+  <option> --- </option>  
+  <option>20</option>
+  <option>30</option>
+  <option>40</option>
+  <option>50</option>
+  <option>60</option>
+  <option>70</option>    
+  <option>70</option>        
 </select>
  to 
-<select id="Age_max">
-  <option>10</option>
-  <option>11</option>
-  <option>12</option>
+<select id="Age_max" name="Age_max">
+  <option> --- </option>  
+  <option>20</option>
+  <option>30</option>
+  <option>40</option>
+  <option>50</option>
+  <option>60</option>
+  <option>70</option>    
+  <option>70</option>     
 </select>
 </div>
 
+<div align="right"> 
+    <input type="submit" value="Visualization" > 
+</div>
+    
+   <input type= "hidden" id='Gender' name="Gender"/> 
+   <input type= "hidden" id='Viewtype' name="Viewtype" value="{{dass_type}}"/>  
+    
+</form>
+    
 </right>
 
 </main>
@@ -98,6 +125,10 @@
 <script>
 function openCity(evt, cityName) {
   var i, tabcontent, tablinks;
+  var inputF = document.getElementById("Gender");  
+    
+  inputF.value = cityName;
+    
   tabcontent = document.getElementsByClassName("tabcontent");
   for (i = 0; i < tabcontent.length; i++) {
     tabcontent[i].style.display = "none";
