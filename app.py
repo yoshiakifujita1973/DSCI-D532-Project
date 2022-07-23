@@ -33,26 +33,50 @@ def visualization():
 def dass_visualizationDS():
     import sqlvisualize
     dass_type = "DS"
-    sqlvisualize.dass_visualize_sql(dass_type)
+    
+    fname = sqlvisualize.dass_visualize_sql(dass_type)
 
-    return render_template('dass_visualization.html', title='personality visualization')
+    return render_template('dass_visualization.html', title='personality visualization', fname=fname, dass_type=dass_type)
 
 @app.route("/visualizationAS")
 def dass_visualizationAS():
     import sqlvisualize
     dass_type = "AS"
-    sqlvisualize.dass_visualize_sql(dass_type)
+    
+    fname = sqlvisualize.dass_visualize_sql(dass_type)
 
-    return render_template('dass_visualization.html', title='personality visualization')
+    return render_template('dass_visualization.html', title='personality visualization', fname=fname, dass_type=dass_type)
 
 @app.route("/visualizationAD")
 def dass_visualizationAD():
     import sqlvisualize
     dass_type = "AD"
-    sqlvisualize.dass_visualize_sql(dass_type)
+    
+    fname = sqlvisualize.dass_visualize_sql(dass_type)
 
-    return render_template('dass_visualization.html', title='personality visualization')
+    return render_template('dass_visualization.html', title='personality visualization', fname=fname, dass_type=dass_type)
 
+@app.route("/dassaction", methods=['GET', 'POST'])
+def dass_action():
+    
+    import sqlvisualize
+    
+    if request.method == 'POST':
+    
+        gender = request.form['Gender']
+        race = request.form['Race']
+        age_min = request.form['Age_min']
+        age_max = request.form['Age_max'] 
+        dass_type = request.form['Viewtype']
+
+        
+        s = gender + ' ' + race + ' ' + age_min + ' ' + age_max + ' ' + dass_type
+        
+    #fname = dass_visualize_sql_filter(dass_type, gender, race, age_min, age_max)
+        
+    return s
+        
+        
 @app.route("/action", methods=['GET', 'POST'])
 def action():
     

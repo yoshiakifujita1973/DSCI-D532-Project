@@ -243,6 +243,86 @@ def dass_visualize_sql(dass_type):
     import pandas as pd
     import matplotlib.pyplot as plt
     from matplotlib.gridspec import GridSpec
+    import datetime
+
+    cnx = mysql.connector.connect(user='gen_viewer', password='1234',
+                                      host='127.0.0.1',
+                                      database='trouble_shoot')
+    c = cnx.cursor()
+    
+    # Gather sum of anxiety score and depression score from all participants
+    
+    if dass_type == "AD":
+    
+        strSQL = 'SELECT AnxietyTotal AS Anxiety,'
+        strSQL = strSQL + 'DepressionTotal AS Depression FROM dass_anxiety '
+        strSQL = strSQL + 'INNER JOIN dass_depression '
+        strSQL = strSQL + 'ON dass_anxiety.test_id = dass_depression.test_id'
+        
+    elif dass_type == "AS":
+        
+        strSQL = 'SELECT AnxietyTotal AS Anxiety,'
+        strSQL = strSQL + 'StressTotal AS Stress FROM dass_anxiety '
+        strSQL = strSQL + 'INNER JOIN dass_stress '
+        strSQL = strSQL + 'ON dass_anxiety.test_id = dass_stress.test_id'
+        
+    elif dass_type == "DS":
+        
+        strSQL = 'SELECT DepressionTotal AS Depression,'
+        strSQL = strSQL + 'StressTotal AS Stress FROM dass_depression '
+        strSQL = strSQL + 'INNER JOIN dass_stress '
+        strSQL = strSQL + 'ON dass_depression.test_id = dass_stress.test_id'
+    
+    #c. execute('''SELECT Q2A + Q4A + Q7A + Q9A + Q15A + Q19A + Q20A + Q23A + Q25A + Q28A + Q30A + Q36A + Q40A + Q41A AS Anxiety, 
+    #        Q3A + Q5A + Q10A + Q13A + Q16A + Q17A + Q21A + Q24A + Q26A + Q31A + Q34A + Q37A + Q38A + Q42A AS Depression FROM dass_anxiety
+    #        INNER JOIN dass_depression
+    #        ON dass_anxiety.test_id = dass_depression.test_id''')
+    
+    c. execute(strSQL)
+
+    df = pd.DataFrame(c.fetchall())
+    
+    cnx.close
+    
+    # Visualize distribution of anxiety score and depression score
+
+    fig = plt.figure(dpi=100, figsize=(5,4))
+
+    gs = GridSpec(4, 4)
+
+    ax_scatter = fig.add_subplot(gs[1:4, 0:3])
+    ax_hist_y = fig.add_subplot(gs[0,0:3])
+    ax_hist_x = fig.add_subplot(gs[1:4, 3])
+
+    ax_scatter.scatter(df[0], df[1], alpha=0.2, color='black')
+    ax_hist_x.hist(df[0], bins=20, orientation = 'horizontal', alpha=0.5, color='black')
+    ax_hist_y.hist(df[1], bins=20, orientation = 'vertical', alpha=0.5, color='black')
+    
+    system_time = datetime.datetime.now()
+
+    t = (system_time.strftime("%m%d%H%M%S"))
+
+    fname = 'visualization' + t + '.jpg'
+
+    filepath = './templates/static/' + fname
+
+    plt.savefig(filepath)
+        
+    return fname
+
+def dass_visualize_sql_filter(dass_type, gender, race, age_min, age_max):
+    
+    import mysql.connector
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    from matplotlib.gridspec import GridSpec
+    import datetime
+    
+    # Set up colors
+    ORANGE = '#FD7120'
+    BLUE = '#00BFFF'
+    BLACK = '#000000'
+    GRAY = '#999999'
 
     cnx = mysql.connector.connect(user='gen_viewer', password='1234',
                                       host='127.0.0.1',
