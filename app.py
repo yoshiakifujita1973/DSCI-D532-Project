@@ -69,12 +69,12 @@ def dass_action():
         age_max = request.form['Age_max'] 
         dass_type = request.form['Viewtype']
 
+        #s = gender + ' ' + race + ' ' + age_min + ' ' + age_max + ' ' + dass_type
         
-        s = gender + ' ' + race + ' ' + age_min + ' ' + age_max + ' ' + dass_type
+    fname = sqlvisualize.dass_visualize_sql_filter(dass_type, gender, race, age_min, age_max)
         
-    #fname = dass_visualize_sql_filter(dass_type, gender, race, age_min, age_max)
-        
-    return s
+    return render_template('dass_visualization.html', title='personality visualization', fname=fname, dass_type=dass_type)
+    
         
         
 @app.route("/action", methods=['GET', 'POST'])

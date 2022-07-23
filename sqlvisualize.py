@@ -250,7 +250,7 @@ def dass_visualize_sql(dass_type):
                                       database='trouble_shoot')
     c = cnx.cursor()
     
-    # Gather sum of anxiety score and depression score from all participants
+    # Gather sum score from all participants
     
     if dass_type == "AD":
     
@@ -259,6 +259,9 @@ def dass_visualize_sql(dass_type):
         strSQL = strSQL + 'INNER JOIN dass_depression '
         strSQL = strSQL + 'ON dass_anxiety.test_id = dass_depression.test_id'
         
+        xtitle = 'Anxiety'
+        ytitle = 'Depression'
+        
     elif dass_type == "AS":
         
         strSQL = 'SELECT AnxietyTotal AS Anxiety,'
@@ -266,17 +269,18 @@ def dass_visualize_sql(dass_type):
         strSQL = strSQL + 'INNER JOIN dass_stress '
         strSQL = strSQL + 'ON dass_anxiety.test_id = dass_stress.test_id'
         
+        xtitle = 'Anxiety'
+        ytitle = 'Stress'
+        
     elif dass_type == "DS":
         
         strSQL = 'SELECT DepressionTotal AS Depression,'
         strSQL = strSQL + 'StressTotal AS Stress FROM dass_depression '
         strSQL = strSQL + 'INNER JOIN dass_stress '
         strSQL = strSQL + 'ON dass_depression.test_id = dass_stress.test_id'
-    
-    #c. execute('''SELECT Q2A + Q4A + Q7A + Q9A + Q15A + Q19A + Q20A + Q23A + Q25A + Q28A + Q30A + Q36A + Q40A + Q41A AS Anxiety, 
-    #        Q3A + Q5A + Q10A + Q13A + Q16A + Q17A + Q21A + Q24A + Q26A + Q31A + Q34A + Q37A + Q38A + Q42A AS Depression FROM dass_anxiety
-    #        INNER JOIN dass_depression
-    #        ON dass_anxiety.test_id = dass_depression.test_id''')
+        
+        xtitle = 'Depression'
+        ytitle = 'Stress'
     
     c. execute(strSQL)
 
@@ -291,6 +295,8 @@ def dass_visualize_sql(dass_type):
     gs = GridSpec(4, 4)
 
     ax_scatter = fig.add_subplot(gs[1:4, 0:3])
+    fig.add_subplot(gs[0,0:3]).set_title(xtitle)
+    fig.add_subplot(gs[1:4, 3]).set_title(ytitle)
     ax_hist_y = fig.add_subplot(gs[0,0:3])
     ax_hist_x = fig.add_subplot(gs[1:4, 3])
 
@@ -329,13 +335,117 @@ def dass_visualize_sql_filter(dass_type, gender, race, age_min, age_max):
                                       database='trouble_shoot')
     c = cnx.cursor()
     
-    # Gather sum of anxiety score and depression score from all participants
+    # Gather sum score from all participants
+    
+    if dass_type == "AD":
+    
+        strSQL = 'SELECT AnxietyTotal AS Anxiety,'
+        strSQL = strSQL + 'DepressionTotal AS Depression FROM dass_anxiety '
+        strSQL = strSQL + 'INNER JOIN dass_depression '
+        strSQL = strSQL + 'ON dass_anxiety.test_id = dass_depression.test_id'
+        
+        strJoin = ' INNER JOIN dass_Test'
+        strJoin = strJoin + ' ON dass_anxiety.Test_ID = dass_test.test_id'
+        strJoin = strJoin + ' INNER JOIN test_taker'
+        strJoin = strJoin + ' ON dass_test.taker_id = test_taker.taker_id'
+        
+        xtitle = 'Anxiety'
+        ytitle = 'Depression'
+        
+    elif dass_type == "AS":
+        
+        strSQL = 'SELECT AnxietyTotal AS Anxiety,'
+        strSQL = strSQL + 'StressTotal AS Stress FROM dass_anxiety '
+        strSQL = strSQL + 'INNER JOIN dass_stress '
+        strSQL = strSQL + 'ON dass_anxiety.test_id = dass_stress.test_id'
+        
+        strJoin = ' INNER JOIN dass_Test'
+        strJoin = strJoin + ' ON dass_anxiety.Test_ID = dass_test.test_id'
+        strJoin = strJoin + ' INNER JOIN test_taker'
+        strJoin = strJoin + ' ON dass_test.taker_id = test_taker.taker_id'
+        
+        xtitle = 'Anxiety'
+        ytitle = 'Stress'
+        
+    elif dass_type == "DS":
+        
+        strSQL = 'SELECT DepressionTotal AS Depression,'
+        strSQL = strSQL + 'StressTotal AS Stress FROM dass_depression '
+        strSQL = strSQL + 'INNER JOIN dass_stress '
+        strSQL = strSQL + 'ON dass_depression.test_id = dass_stress.test_id'
+        
+        strJoin = ' INNER JOIN dass_Test'
+        strJoin = strJoin + ' ON dass_depression.Test_ID = dass_test.test_id'
+        strJoin = strJoin + ' INNER JOIN test_taker'
+        strJoin = strJoin + ' ON dass_test.taker_id = test_taker.taker_id'
+        
+        xtitle = 'Depression'
+        ytitle = 'Stress'
+        
+    strWhere = "Not setted"
+    
+    # filter by gender       
+    if gender == "Male":
+               
+        strWhere = ' WHERE test_taker.gender = 1'
 
-    c. execute('''SELECT Q2A + Q4A + Q7A + Q9A + Q15A + Q19A + Q20A + Q23A + Q25A + Q28A + Q30A + Q36A + Q40A + Q41A AS Anxiety, 
-            Q3A + Q5A + Q10A + Q13A + Q16A + Q17A + Q21A + Q24A + Q26A + Q31A + Q34A + Q37A + Q38A + Q42A AS Depression FROM dass_anxiety
-            INNER JOIN dass_depression
-            ON dass_anxiety.test_id = dass_depression.test_id''')
+        draw_color = BLUE
+        
+    elif gender == "Female":
+        
+        strWhere = ' WHERE test_taker.gender = 2'
+        
+        draw_color = ORANGE
+        
+    else:
+        draw_color = BLACK
+        
+    # filter by race
+    
+    race_value = '0'
 
+    if race == "Asian": 
+        race_value = '10'
+
+    elif race == "Arab":    
+        race_value = '20'
+
+    elif race == "Black": 
+        race_value = '30'
+
+    elif race == "Indigenous Australian":    
+        race_value = '40'        
+
+    elif race == "Native American": 
+        race_value = '50'
+
+    elif race == "White":    
+        race_value = '60'
+
+    if int(race_value) > 0:
+        if strWhere == 'Not setted':
+            strWhere = ' WHERE test_taker.race = ' + race_value
+        else:
+            strWhere = strWhere + ' AND test_taker.race = ' + race_value
+            
+    # filter by age
+    if age_min != "select":
+        if strWhere == 'Not setted':
+            strWhere = ' WHERE test_taker.age > ' + age_min
+        else:
+            strWhere = strWhere + ' AND test_taker.age > ' + age_min        
+        
+    if age_max != "select":
+        if strWhere == 'Not setted':
+            strWhere = ' WHERE test_taker.age < ' + age_max
+        else:
+            strWhere = strWhere + ' AND test_taker.age < ' + age_max
+            
+    if strWhere != 'Not setted':
+        strSQL = strSQL + strJoin + strWhere
+    
+    c. execute(strSQL)
+    
     df = pd.DataFrame(c.fetchall())
     
     cnx.close
@@ -347,13 +457,23 @@ def dass_visualize_sql_filter(dass_type, gender, race, age_min, age_max):
     gs = GridSpec(4, 4)
 
     ax_scatter = fig.add_subplot(gs[1:4, 0:3])
+    fig.add_subplot(gs[0,0:3]).set_title(xtitle)
+    fig.add_subplot(gs[1:4, 3]).set_title(ytitle)
     ax_hist_y = fig.add_subplot(gs[0,0:3])
     ax_hist_x = fig.add_subplot(gs[1:4, 3])
 
-    ax_scatter.scatter(df[0], df[1], alpha=0.2, color='black')
-    ax_hist_x.hist(df[0], bins=20, orientation = 'horizontal', alpha=0.5, color='black')
-    ax_hist_y.hist(df[1], bins=20, orientation = 'vertical', alpha=0.5, color='black')
+    ax_scatter.scatter(df[0], df[1], alpha=0.2, color=draw_color)
+    ax_hist_x.hist(df[0], bins=20, orientation = 'horizontal', alpha=0.5, color=draw_color)
+    ax_hist_y.hist(df[1], bins=20, orientation = 'vertical', alpha=0.5, color=draw_color)
 
-    plt.savefig('./templates/static/dass_visualization.jpg')
-    
-    return dass_type
+    system_time = datetime.datetime.now()
+
+    t = (system_time.strftime("%m%d%H%M%S"))
+
+    fname = 'visualization' + t + '.jpg'
+
+    filepath = './templates/static/' + fname
+
+    plt.savefig(filepath)
+        
+    return fname
