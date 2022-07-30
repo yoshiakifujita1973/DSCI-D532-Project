@@ -136,6 +136,8 @@ def peasonal_visualize_filter(gender, race, age_min, age_max, depression, anxiet
                          
     strWhere = "Not setted"
     
+    # filter by gender
+    
     if gender == 'Male':
         strWhere = ' WHERE test_taker.gender = 1'
         
@@ -148,6 +150,35 @@ def peasonal_visualize_filter(gender, race, age_min, age_max, depression, anxiet
         
     else:
         draw_color = BLACK
+    
+    # Personality score
+    if stress != '0':
+        strJoin = strJoin + ' INNER JOIN dass_stress'
+        strJoin = strJoin + ' ON dass_tipi.test_id = dass_stress.test_id'
+        
+        if strWhere == 'Not setted':
+            strWhere = ' WHERE dass_stress.StressTotal =  ' + stress
+        else:
+            strWhere = strWhere + ' AND dass_stress.StressTotal =  ' + stress
+            
+    if depression != '0':
+        strJoin = strJoin + ' INNER JOIN dass_depression'
+        strJoin = strJoin + ' ON dass_tipi.test_id = dass_depression.test_id'
+        
+        if strWhere == 'Not setted':
+            strWhere = ' WHERE dass_depression.DepressionTotal =  ' + depression
+        else:
+            strWhere = strWhere + ' AND dass_depression.DepressionTotal =  ' + depression
+            
+    if anxiety != '0':
+        strJoin = strJoin + ' INNER JOIN dass_anxiety'
+        strJoin = strJoin + ' ON dass_tipi.test_id = dass_anxiety.test_id'
+        
+        if strWhere == 'Not setted':
+            strWhere = ' WHERE dass_anxiety.AnxietyTotal =  ' + anxiety
+        else:
+            strWhere = strWhere + ' AND dass_anxiety.AnxietyTotal =  ' + anxiety
+
         
     # filter by race
     
@@ -197,7 +228,14 @@ def peasonal_visualize_filter(gender, race, age_min, age_max, depression, anxiet
     c. execute(strSQL)
 
     df = pd.DataFrame(c.fetchall())
-
+                      
+    cnx.close
+    
+    if len(df) == 0:
+        
+        fname = 'visualizationpersonality.jpg'
+        return fname
+                      
     tipi_average = {
           'Extraversion': df[0].mean(),
           'Agreeableness': df[1].mean(),
@@ -205,8 +243,6 @@ def peasonal_visualize_filter(gender, race, age_min, age_max, depression, anxiet
           'Emotional_Stability': df[3].mean(),
           'Openness_to_Experience': df[4].mean(),
     }
-
-    cnx.close
 
     df_avf = pd.DataFrame([tipi_average])
 
@@ -310,6 +346,34 @@ def peasonal_visualize_male_female(race, age_min, age_max, depression, anxiety, 
     strWhere_f = ' WHERE test_taker.gender = 2'
     
     strWhere = 'Not setted'
+                      
+    # Personality score
+    if stress != '0':
+        strJoin = strJoin + ' INNER JOIN dass_stress'
+        strJoin = strJoin + ' ON dass_tipi.test_id = dass_stress.test_id'
+        
+        if strWhere == 'Not setted':
+            strWhere = ' AND dass_stress.StressTotal =  ' + stress
+        else:
+            strWhere = strWhere + ' AND dass_stress.StressTotal =  ' + stress
+            
+    if depression != '0':
+        strJoin = strJoin + ' INNER JOIN dass_depression'
+        strJoin = strJoin + ' ON dass_tipi.test_id = dass_depression.test_id'
+        
+        if strWhere == 'Not setted':
+            strWhere = ' AND dass_depression.DepressionTotal =  ' + depression
+        else:
+            strWhere = strWhere + ' AND dass_depression.DepressionTotal =  ' + depression
+            
+    if anxiety != '0':
+        strJoin = strJoin + ' INNER JOIN dass_anxiety'
+        strJoin = strJoin + ' ON dass_tipi.test_id = dass_anxiety.test_id'
+        
+        if strWhere == 'Not setted':
+            strWhere = ' AND dass_anxiety.AnxietyTotal =  ' + anxiety
+        else:
+            strWhere = strWhere + ' AND dass_anxiety.AnxietyTotal =  ' + anxiety
         
     # filter by race
     
@@ -359,6 +423,11 @@ def peasonal_visualize_male_female(race, age_min, age_max, depression, anxiety, 
     c. execute(strSQL_m)
 
     df = pd.DataFrame(c.fetchall())
+                      
+    if len(df) == 0:
+        cnx.close
+        fname = 'visualizationpersonality.jpg'
+        return fname
 
     tipi_average_male = {
           'Extraversion': df[0].mean(),
@@ -377,6 +446,13 @@ def peasonal_visualize_male_female(race, age_min, age_max, depression, anxiety, 
     c. execute(strSQL_f)
 
     df = pd.DataFrame(c.fetchall())
+                      
+    cnx.close
+                      
+    if len(df) == 0:
+        
+        fname = 'visualizationpersonality.jpg'
+        return fname
 
     tipi_average_female = {
           'Extraversion': df[0].mean(),
@@ -386,7 +462,7 @@ def peasonal_visualize_male_female(race, age_min, age_max, depression, anxiety, 
           'Openness_to_Experience': df[4].mean(),
     }
 
-    cnx.close
+    
 
     df_avf_gender = pd.DataFrame([tipi_average_male, tipi_average_female])
 

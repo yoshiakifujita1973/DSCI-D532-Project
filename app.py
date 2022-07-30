@@ -17,6 +17,10 @@ def hello():
 def index_name():
     return render_template('index.html', title='Welcome')
 
+@app.route("/about")
+def aboutsite():
+    return render_template('about.html', title='About the site')
+
 @app.route("/dass")
 def index_dass():
     return render_template('index_dass.html', title='dass')
